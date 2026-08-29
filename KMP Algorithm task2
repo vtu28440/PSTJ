@@ -1,1 +1,10 @@
-
+import java.util.*;
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        String s=sc.nextLine();
+        String t=s+s;
+        boolean result=t.substring(1,t.length()-1).contains(s);
+        System.out.println(result);
+    }
+}
