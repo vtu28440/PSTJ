@@ -1,1 +1,138 @@
+import java.io.*;
+import java.util.*;
 
+public class Main{
+    static int[] radius;
+    static int[][] sparse;
+    static int[] log;
+
+    static void manacher(int[] a){
+        int n=a.length;
+        radius=new int[n];
+        int center=0;
+        int right=0;
+
+        for(int i=0;i<n;i++){
+            if(i<right)
+                radius[i]=Math.min(right-i,radius[2*center-i]);
+            else
+                radius[i]=1;
+
+            while(i-radius[i]>=0&&i+radius[i]<n&&a[i-radius[i]]==a[i+radius[i]])
+                radius[i]++;
+
+            if(i+radius[i]>right){
+                center=i;
+                right=i+radius[i];
+            }
+        }
+
+        for(int i=0;i<n;i++)
+            radius[i]--;
+    }
+
+    static void buildSparse(){
+        int n=radius.length;
+        int levels=log[n]+1;
+
+        sparse=new int[levels][n];
+
+        for(int i=0;i<n;i++)
+            sparse[0][i]=radius[i];
+
+        for(int k=1;k<levels;k++){
+            int len=1<<k;
+            int half=len>>1;
+
+            for(int i=0;i+len<=n;i++)
+                sparse[k][i]=Math.max(sparse[k-1][i],
+                                       sparse[k-1][i+half]);
+        }
+    }
+
+    static int rangeMax(int left,int right){
+        if(left>right)
+            return 0;
+
+        int len=right-left+1;
+        int k=log[len];
+
+        return Math.max(sparse[k][left],
+                        sparse[k][right-(1<<k)+1]);
+    }
+
+    static int[] circularPalindromes(String s){
+        int n=s.length();
+
+        char[] doubled=new char[2*n];
+
+        for(int i=0;i<n;i++){
+            doubled[i]=s.charAt(i);
+            doubled[i+n]=s.charAt(i);
+        }
+
+        int size=4*n+1;
+        int[] transformed=new int[size];
+
+        for(int i=0;i<2*n;i++)
+            transformed[2*i+1]=doubled[i];
+
+        for(int i=0;i<size;i+=2)
+            transformed[i]=256;
+
+        manacher(transformed);
+
+        log=new int[size+1];
+
+        for(int i=2;i<=size;i++)
+            log[i]=log[i/2]+1;
+
+        buildSparse();
+
+        int[] answer=new int[n];
+
+        for(int rotation=0;rotation<n;rotation++){
+            int left=2*rotation+1;
+            int right=2*(rotation+n-1)+1;
+
+            int low=1;
+            int high=n;
+            int best=1;
+
+            while(low<=high){
+                int mid=(low+high)>>>1;
+
+                int queryLeft=left+mid-1;
+                int queryRight=right-mid+1;
+
+                if(queryLeft<=queryRight&&
+                   rangeMax(queryLeft,queryRight)>=mid){
+                    best=mid;
+                    low=mid+1;
+                }else{
+                    high=mid-1;
+                }
+            }
+
+            answer[rotation]=best;
+        }
+
+        return answer;
+    }
+
+    public static void main(String[] args)throws Exception{
+        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+
+        int n=Integer.parseInt(br.readLine().trim());
+        String s=br.readLine().trim();
+
+        int[] answer=circularPalindromes(s);
+
+        StringBuilder out=new StringBuilder();
+
+        for(int x:answer)
+            out.append(x).append('\n');
+
+        System.out.print(out);
+    }
+}
