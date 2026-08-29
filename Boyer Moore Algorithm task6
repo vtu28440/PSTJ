@@ -1,1 +1,46 @@
+import java.util.*;
 
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        String s=sc.next();
+        String p=sc.next();
+
+        List<Integer> result=new ArrayList<>();
+
+        if(p.length()>s.length()){
+            System.out.println(result);
+            return;
+        }
+
+        int[] count=new int[26];
+
+        for(char c:p.toCharArray())
+            count[c-'a']++;
+
+        int left=0;
+        int right=0;
+        int required=p.length();
+
+        while(right<s.length()){
+            if(count[s.charAt(right)-'a']>0)
+                required--;
+
+            count[s.charAt(right)-'a']++;
+            right++;
+
+            if(right-left==p.length()){
+                if(required==0)
+                    result.add(left);
+
+                if(count[s.charAt(left)-'a']>0)
+                    required++;
+
+                count[s.charAt(left)-'a']--;
+                left++;
+            }
+        }
+
+        System.out.println(result);
+    }
+}
