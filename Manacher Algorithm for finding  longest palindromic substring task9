@@ -1,5 +1,4 @@
 import java.util.*;
-
 public class Main{
     static String longestPalindrome(String s){
         if(s.length()<2)
