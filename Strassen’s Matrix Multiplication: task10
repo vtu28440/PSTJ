@@ -26,7 +26,6 @@ public static void matrixRotation(List<List<Integer>> matrix,int r){
             matrix.get(i).set(layer,a.get(k));
             k=(k+1)%len;
         }
-
         for(int j=layer+1;j<n-layer;j++){
             matrix.get(m-layer-1).set(j,a.get(k));
             k=(k+1)%len;
