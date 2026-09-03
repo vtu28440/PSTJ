@@ -23,7 +23,6 @@ public class Main{
                     break;
                 }
             }
-
             System.out.println(found?"YES":"NO");
         }
     }
