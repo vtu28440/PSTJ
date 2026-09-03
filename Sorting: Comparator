@@ -6,7 +6,7 @@ class Player {
         this.name = name;
         this.score = score;
     }
-}
+} 
 class Checker implements Comparator<Player> {
     @Override
     public int compare(Player a, Player b) {
