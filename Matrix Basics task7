@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.*;
-
 public class Solution {
     public static int diagonalDifference(List<List<Integer>> arr) {
         int n = arr.size();
