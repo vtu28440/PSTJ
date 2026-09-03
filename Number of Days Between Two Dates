@@ -22,7 +22,7 @@ public class Main {
             if (m == 2 && isLeapYear(year)) {
                 totalDays++;
             }
-        }
+        } 
         totalDays += day;
         return totalDays;
     }
