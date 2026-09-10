@@ -1,0 +1,65 @@
+import java.util.*;
+class ThroneInheritance {
+    class Person {
+        String name;
+        List<Person> children;
+        boolean alive;
+        Person(String name) {
+            this.name = name;
+            this.children = new ArrayList<>();
+            this.alive = true;
+        }
+    }
+    Map<String, Person> people;
+    Person king;
+    ThroneInheritance(String kingName) {
+        people = new HashMap<>();
+        king = new Person(kingName);
+        people.put(kingName, king);
+    }
+    public void birth(String parentName, String childName) {
+        Person parent = people.get(parentName);
+        Person child = new Person(childName);
+        parent.children.add(child);
+        people.put(childName, child);
+    }
+    public void death(String name) {
+        people.get(name).alive = false;
+    }
+    public List<String> getInheritanceOrder() {
+        List<String> order = new ArrayList<>();
+        dfs(king, order);
+        return order;
+    }
+    private void dfs(Person person, List<String> order) {
+        if (person.alive) {
+            order.add(person.name);
+        }
+        for (Person child : person.children) {
+            dfs(child, order);
+        }
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String kingName = sc.next();
+        ThroneInheritance throne = new ThroneInheritance(kingName);
+        int n = sc.nextInt();
+        for (int i = 0; i < n; i++) {
+            String operation = sc.next();
+            if (operation.equals("birth")) {
+                String parentName = sc.next();
+                String childName = sc.next();
+                throne.birth(parentName, childName);
+            } else if (operation.equals("death")) {
+                String name = sc.next();
+                throne.death(name);
+            } else if (operation.equals("getInheritanceOrder")) {
+                List<String> order = throne.getInheritanceOrder();
+                System.out.println(String.join(" ", order));
+            }
+        }
+        sc.close();
+    }
+}
