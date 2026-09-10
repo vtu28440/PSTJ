@@ -1,1 +1,28 @@
+import java.util.*;
+class ParkingSystem{
+int[] a;
+ParkingSystem(int big,int medium,int small){
+a=new int[]{big,medium,small};
+}
+boolean addCar(int carType){
+if(a[carType-1]>0){
+a[carType-1]--;
+return true;
+}
+return false;
+}
+}
+public class Main{
+public static void main(String[] args){
+Scanner sc=new Scanner(System.in);
+int big=sc.nextInt();
+int medium=sc.nextInt();
+int small=sc.nextInt();
+ParkingSystem parkingSystem=new ParkingSystem(big,medium,small);
+int n=sc.nextInt();
+for(int i=0;i<n;i++){
+System.out.println(parkingSystem.addCar(sc.nextInt()));
+}
+}
+}
 
