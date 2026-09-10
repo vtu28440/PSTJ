@@ -1,0 +1,72 @@
+import java.util.*;
+class UndergroundSystem {
+    HashMap<Integer, CheckInData> checkIns;
+    HashMap<String, RouteData> routes;
+    UndergroundSystem() {
+        checkIns = new HashMap<>();
+        routes = new HashMap<>();
+    }
+    public void checkIn(int id, String stationName, int t) {
+        checkIns.put(id, new CheckInData(stationName, t));
+    }
+    public void checkOut(int id, String stationName, int t) {
+        CheckInData data = checkIns.get(id);
+        String route = data.stationName + "#" + stationName;
+        int travelTime = t - data.time;
+        if (!routes.containsKey(route)) {
+            routes.put(route, new RouteData());
+        }
+        RouteData r = routes.get(route);
+        r.totalTime += travelTime;
+        r.count++;
+        checkIns.remove(id);
+    }
+    public double getAverageTime(String startStation, String endStation) {
+        String route = startStation + "#" + endStation;
+        RouteData r = routes.get(route);
+        return (double) r.totalTime / r.count;
+    }
+}
+class CheckInData {
+    String stationName;
+    int time;
+    CheckInData(String stationName, int time) {
+        this.stationName = stationName;
+        this.time = time;
+    }
+}
+class RouteData {
+    long totalTime;
+    int count;
+    RouteData() {
+        totalTime = 0;
+        count = 0;
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        UndergroundSystem undergroundSystem = new UndergroundSystem();
+        int n = sc.nextInt();
+        for (int i = 0; i < n; i++) {
+            String operation = sc.next();
+            if (operation.equals("checkIn")) {
+                int id = sc.nextInt();
+                String station = sc.next();
+                int time = sc.nextInt();
+                undergroundSystem.checkIn(id, station, time);
+            } else if (operation.equals("checkOut")) {
+                int id = sc.nextInt();
+                String station = sc.next();
+                int time = sc.nextInt();
+                undergroundSystem.checkOut(id, station, time);
+            } else if (operation.equals("getAverageTime")) {
+                String start = sc.next();
+                String end = sc.next();
+                System.out.printf("%.5f%n",
+                        undergroundSystem.getAverageTime(start, end));
+            }
+        }
+        sc.close();
+    }
+}
